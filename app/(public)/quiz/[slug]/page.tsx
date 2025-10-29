@@ -26,9 +26,11 @@ export default async function QuizPage({ params }: { params: { slug: string } })
   async function createSession() {
     'use server';
     const admin = createAdminClient();
+    const testId = test?.id;
+    if (!testId) return;
     const { data, error } = await admin
       .from('sessions')
-      .insert({ test_id: test.id })
+      .insert({ test_id: testId })
       .select('id')
       .single();
     if (error || !data) return;
