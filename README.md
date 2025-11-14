@@ -14,6 +14,7 @@ Create `.env.local` (local) and add the same keys to Vercel Project Settings →
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: your Supabase anon key (public)
 - `SUPABASE_SERVICE_ROLE`: service role key (server-only, never exposed client-side)
 - `NEXT_PUBLIC_APP_URL`: base URL used by server components to fetch API (e.g., `http://localhost:3000` in dev, your Vercel URL in prod)
+- `NEXT_PUBLIC_DEFAULT_TEST_SLUG`: slug for the quiz shown on the home page CTA (defaults to `bullying-id`)
 
 Example `.env.local`:
 ```
@@ -21,6 +22,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://xyzcompany.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=ey...public
 SUPABASE_SERVICE_ROLE=ey...secret
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_DEFAULT_TEST_SLUG=bullying-id
 ```
 
 ### Install and run (local)
@@ -41,7 +43,7 @@ App runs at `http://localhost:3000`.
 ```
 
 Included defaults
-- Test slug: `bullying-id`
+- Test slug (configurable via `NEXT_PUBLIC_DEFAULT_TEST_SLUG`): `bullying-id`
 - Items: 42 Indonesian statements (order_index 1–42)
 - Subscales: physical (1–12), verbal (13–22, 35), cyber (36–42)
 - Likert labels: sangat tidak setuju (1) → sangat setuju (5)
@@ -53,8 +55,9 @@ Included defaults
 
 ### Running the flow
 - Home: `/`
-- Start quiz: `/quiz/bullying-id`
-  - Starts a session, then redirects to `/quiz/bullying-id/take/[sessionId]`
+- Start quiz: `/quiz/<slug>`
+  - The `<slug>` comes from `NEXT_PUBLIC_DEFAULT_TEST_SLUG` (default `bullying-id`)
+  - Starts a session, then redirects to `/quiz/<slug>/take/[sessionId]`
 - Answer items: buttons save responses via API
 - Finish → results: `/result/[sessionId]`
 
@@ -72,7 +75,7 @@ Included defaults
    - `SUPABASE_SERVICE_ROLE` (server only)
    - `NEXT_PUBLIC_APP_URL` (e.g., `https://your-app.vercel.app`)
 3) Build & output settings: default Next.js (no extra config)
-4) After first deploy, visit the production URL and test `/quiz/bullying-id`
+4) After first deploy, visit the production URL and test `/quiz/${NEXT_PUBLIC_DEFAULT_TEST_SLUG}`
 
 Notes
 - Route handlers already specify `export const runtime = 'nodejs'` for server-side Supabase admin calls
