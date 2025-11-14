@@ -2,9 +2,17 @@ export const dynamic = 'force-dynamic';
 
 type Band = { label: string; statement: string };
 
+import { headers } from 'next/headers';
+
 export default async function ResultPage({ params }: { params: { sessionId: string } }) {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? '';
-  const res = await fetch(`${base}/api/result/${params.sessionId}`, { cache: 'no-store' });
+  const envBase = process.env.NEXT_PUBLIC_APP_URL;
+  const h = headers();
+  const host = h.get('x-forwarded-host') ?? h.get('host');
+  const proto = h.get('x-forwarded-proto') ?? 'http';
+  const derivedBase = host ? `${proto}://${host}` : '';
+  const base = envBase && envBase.length > 0 ? envBase : derivedBase;
+  const url = `${base}/api/result/${params.sessionId}`;
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) return <p>Terjadi kesalahan memuat hasil.</p>;
   const { overall, subscales }: { overall: Band | null; subscales: Record<string, Band> } = await res.json();
 
