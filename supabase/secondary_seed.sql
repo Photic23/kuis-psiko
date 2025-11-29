@@ -26,7 +26,7 @@ delete from subscales where test_id in (select test_id from t);
 with t as (select id as test_id from tests where slug = 'sosio-emosional')
 delete from likert_options where test_id in (select test_id from t);
 
--- Subscales & Likert (4-point)
+-- Subscales & Likert (5-point)
 with t as (select id as test_id from tests where slug = 'sosio-emosional'),
 subscale_source (key, name) as (
   values
@@ -47,10 +47,11 @@ from t cross join subscale_source s;
 
 with t as (select id as test_id from tests where slug = 'sosio-emosional')
 insert into likert_options (test_id, label, score)
-select test_id, 'SS', 4 from t
-union all select test_id, 'S', 3 from t
-union all select test_id, 'TS', 2 from t
-union all select test_id, 'STS', 1 from t;
+select test_id, 'sangat tidak setuju', 1 from t
+union all select test_id, 'tidak setuju', 2 from t
+union all select test_id, 'netral', 3 from t
+union all select test_id, 'setuju', 4 from t
+union all select test_id, 'sangat setuju', 5 from t;
 
 -- Items and subscale mapping
 with t as (select id as test_id from tests where slug = 'sosio-emosional'),
@@ -171,71 +172,71 @@ with context as (
 ),
 band_rows (subscale_key, label, min_score, max_score, statement) as (
   values
-    ('communication_verbal', 'rendah', 5, 10,
+    ('communication_verbal', 'rendah', 5, 11,
      'Kemampuan komunikasi verbal perlu diperkuat. Latih menjelaskan ulang materi, berani menyampaikan pendapat, jaga intonasi, dan hindari istilah yang membingungkan.'),
-    ('communication_verbal', 'sedang', 11, 15,
+    ('communication_verbal', 'sedang', 12, 18,
      'Komunikasi verbal berada di tingkat sedang. Perbanyak kesempatan berbicara terstruktur dan mintalah umpan balik supaya penyampaian makin jelas.'),
-    ('communication_verbal', 'tinggi', 16, 20,
+    ('communication_verbal', 'tinggi', 19, 25,
      'Komunikasi verbal sudah kuat. Pertahankan keberanian menyampaikan ide dan bantu teman yang masih ragu berbicara.'),
-    ('listening_skills', 'rendah', 5, 10,
+    ('listening_skills', 'rendah', 5, 11,
      'Listening skill rendah. Beri perhatian penuh, jauhkan gawai saat diajak bicara, dan biasakan memberi respon kecil agar lawan bicara merasa dihargai.'),
-    ('listening_skills', 'sedang', 11, 15,
+    ('listening_skills', 'sedang', 12, 18,
      'Listening skill cukup baik. Tetap latih fokus dan kesabaran agar tidak memotong pembicaraan teman.'),
-    ('listening_skills', 'tinggi', 16, 20,
+    ('listening_skills', 'tinggi', 19, 25,
      'Listening skill sangat baik. Terus jaga empati saat mendengar curhat teman dan tularkan kebiasaan mendengarkan aktif.'),
-    ('respect_empathy', 'rendah', 5, 10,
+    ('respect_empathy', 'rendah', 6, 13,
      'Sikap menghargai & peduli masih rendah. Hindari membeda-bedakan teman, hadirkan empati, dan apresiasi usaha orang lain.'),
-    ('respect_empathy', 'sedang', 11, 15,
+    ('respect_empathy', 'sedang', 14, 21,
      'Empati berada di tingkat sedang. Tingkatkan kebiasaan menolong teman, mendengarkan tanpa menghakimi, serta memberi dukungan emosional.'),
-    ('respect_empathy', 'tinggi', 16, 20,
+    ('respect_empathy', 'tinggi', 22, 30,
      'Empati dan rasa hormat kuat. Pertahankan sikap menghargai perbedaan dan jadilah teladan dalam diskusi kelompok.'),
-    ('cooperation', 'rendah', 5, 10,
+    ('cooperation', 'rendah', 5, 11,
      'Kerja sama kelompok rendah. Belajar menerima keputusan bersama, berbagi tugas, dan bantu teman hingga selesai.'),
-    ('cooperation', 'sedang', 11, 15,
+    ('cooperation', 'sedang', 12, 18,
      'Kerja sama cukup stabil. Terus aktif ketika konflik kecil muncul dan dukung ritme kerja tim.'),
-    ('cooperation', 'tinggi', 16, 20,
+    ('cooperation', 'tinggi', 19, 25,
      'Kerja sama sangat baik. Pertahankan kultur saling membantu dan bantu tim lain yang masih belum kompak.'),
-    ('assertiveness', 'rendah', 3, 6,
+    ('assertiveness', 'rendah', 3, 7,
      'Ketegasan rendah. Latih menolak ajakan negatif secara sopan, jujur mengakui kesalahan, dan teguh menjaga aturan sekolah.'),
-    ('assertiveness', 'sedang', 7, 9,
+    ('assertiveness', 'sedang', 8, 11,
      'Ketegasan moderat. Tingkatkan keberanian menyampaikan batasan memakai bahasa santun.'),
-    ('assertiveness', 'tinggi', 10, 12,
+    ('assertiveness', 'tinggi', 12, 15,
      'Ketegasan tinggi. Terus gunakan pendekatan sopan namun tegas dan bantu teman yang masih ragu bersikap.'),
-    ('self_awareness', 'rendah', 3, 6,
+    ('self_awareness', 'rendah', 3, 7,
      'Kesadaran diri rendah. Kenali apa yang membuat nyaman/tidak nyaman dan refleksikan ekspresi saat berbicara di depan umum.'),
-    ('self_awareness', 'sedang', 7, 9,
+    ('self_awareness', 'sedang', 8, 11,
      'Kesadaran diri cukup. Pertahankan kebiasaan mengevaluasi diri dan buat rencana perbaikan ketika gugup.'),
-    ('self_awareness', 'tinggi', 10, 12,
+    ('self_awareness', 'tinggi', 12, 15,
      'Kesadaran diri tinggi. Manfaatkan pemahaman diri untuk mengembangkan potensi berbicara dan membantu teman menemukan zona nyaman mereka.'),
-    ('self_regulation', 'rendah', 3, 6,
+    ('self_regulation', 'rendah', 3, 7,
      'Pengaturan diri rendah. Bangun rutinitas positif untuk mengelola stres dan belajar menenangkan diri ketika diejek.'),
-    ('self_regulation', 'sedang', 7, 9,
+    ('self_regulation', 'sedang', 8, 11,
      'Pengaturan diri cukup baik. Teruskan kebiasaan mengendalikan emosi dan tambahkan teknik relaksasi singkat saat situasi sulit.'),
-    ('self_regulation', 'tinggi', 10, 12,
+    ('self_regulation', 'tinggi', 12, 15,
      'Pengaturan diri tinggi. Pertahankan kemampuan tetap tenang dan bagikan strategi coping kepada teman.'),
-    ('self_motivation', 'rendah', 3, 6,
+    ('self_motivation', 'rendah', 4, 9,
      'Motivasi diri rendah. Rayakan keberhasilan kecil, tetapkan tujuan belajar, dan coba strategi baru saat menemui hambatan.'),
-    ('self_motivation', 'sedang', 7, 9,
+    ('self_motivation', 'sedang', 10, 14,
      'Motivasi diri berada di tengah. Buat jadwal belajar yang konsisten dan catat progres agar semangat tetap terjaga.'),
-    ('self_motivation', 'tinggi', 10, 12,
+    ('self_motivation', 'tinggi', 15, 20,
      'Motivasi diri tinggi. Pertahankan kebiasaan mengejar target akademik dan inspirasi teman untuk bangkit setelah gagal.'),
-    ('empathy_emotional', 'rendah', 4, 8,
+    ('empathy_emotional', 'rendah', 5, 11,
      'Empati emosional rendah. Perluas kepekaan terhadap perasaan teman dengan aktif bertanya kabar dan hadir ketika mereka sedih.'),
-    ('empathy_emotional', 'sedang', 9, 12,
+    ('empathy_emotional', 'sedang', 12, 18,
      'Empati emosional cukup. Tingkatkan kebiasaan memahami sudut pandang orang lain sebelum merespons.'),
-    ('empathy_emotional', 'tinggi', 13, 16,
+    ('empathy_emotional', 'tinggi', 19, 25,
      'Empati emosional tinggi. Pertahankan keterbukaan hati dan bantu kelompok menjaga iklim saling mendukung.'),
-    ('social_skills', 'rendah', 5, 10,
+    ('social_skills', 'rendah', 5, 11,
      'Keterampilan sosial rendah. Latih keberanian menyapa orang baru, jaga tutur kata, dan tawarkan bantuan saat teman kesulitan.'),
-    ('social_skills', 'sedang', 11, 15,
+    ('social_skills', 'sedang', 12, 18,
      'Keterampilan sosial cukup. Perluas jaringan pertemanan dan terus kelola konflik kecil agar kelas nyaman.'),
-    ('social_skills', 'tinggi', 16, 20,
+    ('social_skills', 'tinggi', 19, 25,
      'Keterampilan sosial tinggi. Pertahankan inisiatif membantu teman dan jadilah penggerak suasana positif di kelas.'),
-    ('overall', 'rendah', 39, 78,
+    ('overall', 'rendah', 39, 91,
      'Skor keseluruhan rendah. Fokus meningkatkan komunikasi, empati, pengelolaan emosi, serta motivasi belajar secara bertahap.'),
-    ('overall', 'sedang', 79, 117,
+    ('overall', 'sedang', 92, 143,
      'Skor keseluruhan sedang. Teruskan kebiasaan positif dan lengkapi area yang belum konsisten melalui latihan terarah.'),
-    ('overall', 'tinggi', 118, 156,
+    ('overall', 'tinggi', 144, 195,
      'Skor keseluruhan tinggi. Pertahankan keseimbangan keterampilan sosial-emosional dan dukung teman yang masih membutuhkan pendampingan.')
 )
 insert into result_bands (test_id, subscale_id, label, min_score, max_score, statement)
