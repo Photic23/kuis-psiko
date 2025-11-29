@@ -27,13 +27,19 @@ export default async function QuizPage({ params }: { params: { slug: string } })
     'use server';
     const admin = createAdminClient();
     const testId = test?.id;
-    if (!testId) return;
+    if (!testId) throw new Error('testId missing');
+  
     const { data, error } = await admin
       .from('sessions')
       .insert({ test_id: testId })
       .select('id')
       .single();
-    if (error || !data) return;
+  
+    if (error || !data) {
+      console.error('createSession error', error);
+      throw new Error(error?.message ?? 'failed to create session');
+    }
+  
     redirect(`/quiz/${params.slug}/take/${data.id}`);
   }
 
